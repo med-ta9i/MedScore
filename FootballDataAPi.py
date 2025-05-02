@@ -36,7 +36,7 @@ class FootballDataAPI:
         endpoint = "/competitions"
         data = self._make_request(endpoint)
 
-        excluded_codes = ['WC', 'CL', 'EC']
+        excluded_codes = ['WC', 'CL', 'EC','CLI','BSA']
 
         # Filtrer les compétitions
         if isinstance(data, dict) and 'competitions' in data:

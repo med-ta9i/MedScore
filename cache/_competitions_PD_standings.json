@@ -19,7 +19,7 @@
         "id": 2292,
         "startDate": "2024-08-18",
         "endDate": "2025-05-25",
-        "currentMatchday": 33,
+        "currentMatchday": 34,
         "winner": null
     },
     "standings": [
@@ -107,6 +107,25 @@
                 {
                     "position": 5,
                     "team": {
+                        "id": 94,
+                        "name": "Villarreal CF",
+                        "shortName": "Villarreal",
+                        "tla": "VIL",
+                        "crest": "https://crests.football-data.org/94.png"
+                    },
+                    "playedGames": 33,
+                    "form": null,
+                    "won": 15,
+                    "draw": 10,
+                    "lost": 8,
+                    "points": 55,
+                    "goalsFor": 56,
+                    "goalsAgainst": 45,
+                    "goalDifference": 11
+                },
+                {
+                    "position": 6,
+                    "team": {
                         "id": 90,
                         "name": "Real Betis Balompié",
                         "shortName": "Real Betis",
@@ -122,25 +141,6 @@
                     "goalsFor": 50,
                     "goalsAgainst": 41,
                     "goalDifference": 9
-                },
-                {
-                    "position": 6,
-                    "team": {
-                        "id": 94,
-                        "name": "Villarreal CF",
-                        "shortName": "Villarreal",
-                        "tla": "VIL",
-                        "crest": "https://crests.football-data.org/94.png"
-                    },
-                    "playedGames": 32,
-                    "form": null,
-                    "won": 14,
-                    "draw": 10,
-                    "lost": 8,
-                    "points": 52,
-                    "goalsFor": 55,
-                    "goalsAgainst": 45,
-                    "goalDifference": 10
                 },
                 {
                     "position": 7,
@@ -265,15 +265,15 @@
                         "tla": "ESP",
                         "crest": "https://crests.football-data.org/80.png"
                     },
-                    "playedGames": 32,
+                    "playedGames": 33,
                     "form": null,
                     "won": 10,
                     "draw": 9,
-                    "lost": 13,
+                    "lost": 14,
                     "points": 39,
                     "goalsFor": 35,
-                    "goalsAgainst": 41,
-                    "goalDifference": -6
+                    "goalsAgainst": 42,
+                    "goalDifference": -7
                 },
                 {
                     "position": 14,

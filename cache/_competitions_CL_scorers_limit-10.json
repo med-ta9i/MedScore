@@ -1,1 +1,333 @@
-{"count": 10, "filters": {"season": "2024", "limit": 10}, "competition": {"id": 2001, "name": "UEFA Champions League", "code": "CL", "type": "CUP", "emblem": "https://crests.football-data.org/CL.png"}, "season": {"id": 2350, "startDate": "2024-09-17", "endDate": "2025-05-31", "currentMatchday": 2, "winner": null}, "scorers": [{"player": {"id": 37428, "name": "Raphinha", "firstName": "", "lastName": "Raphinha", "dateOfBirth": "1996-12-14", "nationality": "Brazil", "section": "Left Winger", "position": null, "shirtNumber": 7, "lastUpdated": "2024-11-28T13:36:10Z"}, "team": {"id": 81, "name": "FC Barcelona", "shortName": "Barça", "tla": "FCB", "crest": "https://crests.football-data.org/81.png", "address": "Avenida Arístides Maillol s/n Barcelona 08028", "website": "http://www.fcbarcelona.com", "founded": 1899, "clubColors": "Red / Navy Blue / Orange", "venue": "Camp Nou", "lastUpdated": "2024-07-29T17:09:22Z"}, "playedMatches": 10, "goals": 11, "assists": 5, "penalties": null}, {"player": {"id": 8004, "name": "Harry Kane", "firstName": "Harry", "lastName": "Kane", "dateOfBirth": "1993-07-28", "nationality": "England", "section": "Centre-Forward", "position": null, "shirtNumber": null, "lastUpdated": "2024-08-12T11:57:09Z"}, "team": {"id": 5, "name": "FC Bayern München", "shortName": "Bayern", "tla": "FCB", "crest": "https://crests.football-data.org/5.png", "address": "Säbenerstr. 51 München 81547", "website": "http://www.fcbayern.de", "founded": 1900, "clubColors": "Red / White / Blue", "venue": "Allianz Arena", "lastUpdated": "2024-07-09T17:26:37Z"}, "playedMatches": 11, "goals": 10, "assists": 2, "penalties": 4}, {"player": {"id": 211, "name": "Sehrou Guirassy", "firstName": "Serhou", "lastName": "Guirassy", "dateOfBirth": "1996-03-12", "nationality": "Guinea", "section": "Centre-Forward", "position": null, "shirtNumber": 9, "lastUpdated": "2024-08-12T11:57:09Z"}, "team": {"id": 4, "name": "Borussia Dortmund", "shortName": "Dortmund", "tla": "BVB", "crest": "https://crests.football-data.org/4.png", "address": "Rheinlanddamm 207-209 Dortmund 44137", "website": "http://www.bvb.de", "founded": 1909, "clubColors": "Black / Yellow", "venue": "Signal Iduna Park", "lastUpdated": "2022-02-25T16:50:16Z"}, "playedMatches": 12, "goals": 10, "assists": 4, "penalties": 4}, {"player": {"id": 371, "name": "Robert Lewandowski", "firstName": "Robert", "lastName": "Lewandowski", "dateOfBirth": "1988-08-21", "nationality": "Poland", "section": "Centre-Forward", "position": null, "shirtNumber": null, "lastUpdated": "2024-08-12T11:57:14Z"}, "team": {"id": 81, "name": "FC Barcelona", "shortName": "Barça", "tla": "FCB", "crest": "https://crests.football-data.org/81.png", "address": "Avenida Arístides Maillol s/n Barcelona 08028", "website": "http://www.fcbarcelona.com", "founded": 1899, "clubColors": "Red / Navy Blue / Orange", "venue": "Camp Nou", "lastUpdated": "2024-07-29T17:09:22Z"}, "playedMatches": 10, "goals": 9, "assists": null, "penalties": 3}, {"player": {"id": 38101, "name": "Erling Haaland", "firstName": "Erling", "lastName": "Haaland", "dateOfBirth": "2000-07-21", "nationality": "Norway", "section": "Centre-Forward", "position": null, "shirtNumber": null, "lastUpdated": "2025-04-02T09:41:03Z"}, "team": {"id": 65, "name": "Manchester City FC", "shortName": "Man City", "tla": "MCI", "crest": "https://crests.football-data.org/65.png", "address": "SportCity Manchester M11 3FF", "website": "https://www.mancity.com", "founded": 1880, "clubColors": "Sky Blue / White", "venue": "Etihad Stadium", "lastUpdated": "2022-02-10T19:48:37Z"}, "playedMatches": 10, "goals": 8, "assists": null, "penalties": 2}, {"player": {"id": 3374, "name": "Kylian Mbappé", "firstName": "Kylian", "lastName": "Mbappé", "dateOfBirth": "1998-12-20", "nationality": "France", "section": "Centre-Forward", "position": null, "shirtNumber": null, "lastUpdated": "2024-08-12T11:57:19Z"}, "team": {"id": 86, "name": "Real Madrid CF", "shortName": "Real Madrid", "tla": "RMA", "crest": "https://crests.football-data.org/86.png", "address": "Avenida Concha Espina, 1 Madrid 28036", "website": "http://www.realmadrid.com", "founded": 1902, "clubColors": "White / Purple", "venue": "Estadio Santiago Bernabéu", "lastUpdated": "2022-02-19T08:59:31Z"}, "playedMatches": 12, "goals": 7, "assists": 1, "penalties": null}, {"player": {"id": 8924, "name": "Jonathan David", "firstName": "Jonathan", "lastName": "David", "dateOfBirth": "2000-01-14", "nationality": "Canada", "section": "Centre-Forward", "position": null, "shirtNumber": null, "lastUpdated": "2024-10-09T09:41:10Z"}, "team": {"id": 521, "name": "Lille OSC", "shortName": "Lille", "tla": "LIL", "crest": "https://crests.football-data.org/521.png", "address": "Grand Rue 59, 780 Camphin-en-Pévèle Lille null", "website": "http://www.losc.fr", "founded": 1944, "clubColors": "White / Red", "venue": "Stade Pierre-Mauroy", "lastUpdated": "2024-07-29T17:19:48Z"}, "playedMatches": 10, "goals": 7, "assists": 2, "penalties": 2}, {"player": {"id": 1556, "name": "Vinicius Junior", "firstName": "", "lastName": "Vinícius Junior", "dateOfBirth": "2000-07-12", "nationality": "Brazil", "section": "Left Winger", "position": null, "shirtNumber": null, "lastUpdated": "2024-08-12T11:57:14Z"}, "team": {"id": 86, "name": "Real Madrid CF", "shortName": "Real Madrid", "tla": "RMA", "crest": "https://crests.football-data.org/86.png", "address": "Avenida Concha Espina, 1 Madrid 28036", "website": "http://www.realmadrid.com", "founded": 1902, "clubColors": "White / Purple", "venue": "Estadio Santiago Bernabéu", "lastUpdated": "2022-02-19T08:59:31Z"}, "playedMatches": 10, "goals": 7, "assists": 2, "penalties": 1}, {"player": {"id": 98571, "name": "Julián Álvarez", "firstName": "Julián", "lastName": "Alvarez", "dateOfBirth": "2000-01-31", "nationality": "Argentina", "section": "Centre-Forward", "position": null, "shirtNumber": null, "lastUpdated": "2024-08-23T09:25:15Z"}, "team": {"id": 78, "name": "Club Atlético de Madrid", "shortName": "Atleti", "tla": "ATL", "crest": "https://crests.football-data.org/78.png", "address": "Paseo Virgen del Puerto, 67 Madrid 28005", "website": "http://www.clubatleticodemadrid.com", "founded": 1903, "clubColors": "Red / White / Blue", "venue": "Estadio Wanda Metropolitano", "lastUpdated": "2024-07-29T17:08:58Z"}, "playedMatches": 10, "goals": 7, "assists": 1, "penalties": null}, {"player": {"id": 67299, "name": "Vangelis Pavlidis", "firstName": "Vangelis", "lastName": "Pavlidis", "dateOfBirth": "1998-11-21", "nationality": "Greece", "section": "Offence", "position": null, "shirtNumber": null, "lastUpdated": "2023-07-30T23:06:57Z"}, "team": {"id": 1903, "name": "Sport Lisboa e Benfica", "shortName": "SL Benfica", "tla": "BEN", "crest": "https://crests.football-data.org/1903.png", "address": "Avenida General Norton de Matos 1500 Lissabon null", "website": "https://www.slbenfica.pt", "founded": 1904, "clubColors": null, "venue": "Estádio do Sport Lisboa e Benfica", "lastUpdated": "2024-11-06T20:07:52Z"}, "playedMatches": 12, "goals": 7, "assists": 1, "penalties": 2}]}
+{
+    "count": 10,
+    "filters": {
+        "season": "2024",
+        "limit": 10
+    },
+    "competition": {
+        "id": 2001,
+        "name": "UEFA Champions League",
+        "code": "CL",
+        "type": "CUP",
+        "emblem": "https://crests.football-data.org/CL.png"
+    },
+    "season": {
+        "id": 2350,
+        "startDate": "2024-09-17",
+        "endDate": "2025-05-31",
+        "currentMatchday": 2,
+        "winner": null
+    },
+    "scorers": [
+        {
+            "player": {
+                "id": 211,
+                "name": "Sehrou Guirassy",
+                "firstName": "Serhou",
+                "lastName": "Guirassy",
+                "dateOfBirth": "1996-03-12",
+                "nationality": "Guinea",
+                "section": "Centre-Forward",
+                "position": null,
+                "shirtNumber": 9,
+                "lastUpdated": "2024-08-12T11:57:09Z"
+            },
+            "team": {
+                "id": 4,
+                "name": "Borussia Dortmund",
+                "shortName": "Dortmund",
+                "tla": "BVB",
+                "crest": "https://crests.football-data.org/4.png",
+                "address": "Rheinlanddamm 207-209 Dortmund 44137",
+                "website": "http://www.bvb.de",
+                "founded": 1909,
+                "clubColors": "Black / Yellow",
+                "venue": "Signal Iduna Park",
+                "lastUpdated": "2022-02-25T16:50:16Z"
+            },
+            "playedMatches": 14,
+            "goals": 13,
+            "assists": 4,
+            "penalties": 5
+        },
+        {
+            "player": {
+                "id": 37428,
+                "name": "Raphinha",
+                "firstName": "",
+                "lastName": "Raphinha",
+                "dateOfBirth": "1996-12-14",
+                "nationality": "Brazil",
+                "section": "Left Winger",
+                "position": null,
+                "shirtNumber": 7,
+                "lastUpdated": "2024-11-28T13:36:10Z"
+            },
+            "team": {
+                "id": 81,
+                "name": "FC Barcelona",
+                "shortName": "Barça",
+                "tla": "FCB",
+                "crest": "https://crests.football-data.org/81.png",
+                "address": "Avenida Arístides Maillol s/n Barcelona 08028",
+                "website": "http://www.fcbarcelona.com",
+                "founded": 1899,
+                "clubColors": "Red / Navy Blue / Orange",
+                "venue": "Camp Nou",
+                "lastUpdated": "2024-07-29T17:09:22Z"
+            },
+            "playedMatches": 13,
+            "goals": 12,
+            "assists": 8,
+            "penalties": null
+        },
+        {
+            "player": {
+                "id": 8004,
+                "name": "Harry Kane",
+                "firstName": "Harry",
+                "lastName": "Kane",
+                "dateOfBirth": "1993-07-28",
+                "nationality": "England",
+                "section": "Centre-Forward",
+                "position": null,
+                "shirtNumber": null,
+                "lastUpdated": "2024-08-12T11:57:09Z"
+            },
+            "team": {
+                "id": 5,
+                "name": "FC Bayern München",
+                "shortName": "Bayern",
+                "tla": "FCB",
+                "crest": "https://crests.football-data.org/5.png",
+                "address": "Säbenerstr. 51 München 81547",
+                "website": "http://www.fcbayern.de",
+                "founded": 1900,
+                "clubColors": "Red / White / Blue",
+                "venue": "Allianz Arena",
+                "lastUpdated": "2024-07-09T17:26:37Z"
+            },
+            "playedMatches": 13,
+            "goals": 11,
+            "assists": 2,
+            "penalties": 4
+        },
+        {
+            "player": {
+                "id": 371,
+                "name": "Robert Lewandowski",
+                "firstName": "Robert",
+                "lastName": "Lewandowski",
+                "dateOfBirth": "1988-08-21",
+                "nationality": "Poland",
+                "section": "Centre-Forward",
+                "position": null,
+                "shirtNumber": null,
+                "lastUpdated": "2024-08-12T11:57:14Z"
+            },
+            "team": {
+                "id": 81,
+                "name": "FC Barcelona",
+                "shortName": "Barça",
+                "tla": "FCB",
+                "crest": "https://crests.football-data.org/81.png",
+                "address": "Avenida Arístides Maillol s/n Barcelona 08028",
+                "website": "http://www.fcbarcelona.com",
+                "founded": 1899,
+                "clubColors": "Red / Navy Blue / Orange",
+                "venue": "Camp Nou",
+                "lastUpdated": "2024-07-29T17:09:22Z"
+            },
+            "playedMatches": 12,
+            "goals": 11,
+            "assists": null,
+            "penalties": 3
+        },
+        {
+            "player": {
+                "id": 38101,
+                "name": "Erling Haaland",
+                "firstName": "Erling",
+                "lastName": "Haaland",
+                "dateOfBirth": "2000-07-21",
+                "nationality": "Norway",
+                "section": "Centre-Forward",
+                "position": null,
+                "shirtNumber": null,
+                "lastUpdated": "2025-04-02T09:41:03Z"
+            },
+            "team": {
+                "id": 65,
+                "name": "Manchester City FC",
+                "shortName": "Man City",
+                "tla": "MCI",
+                "crest": "https://crests.football-data.org/65.png",
+                "address": "SportCity Manchester M11 3FF",
+                "website": "https://www.mancity.com",
+                "founded": 1880,
+                "clubColors": "Sky Blue / White",
+                "venue": "Etihad Stadium",
+                "lastUpdated": "2022-02-10T19:48:37Z"
+            },
+            "playedMatches": 10,
+            "goals": 8,
+            "assists": null,
+            "penalties": 2
+        },
+        {
+            "player": {
+                "id": 3220,
+                "name": "Lautaro Martínez",
+                "firstName": "Lautaro",
+                "lastName": "Martínez",
+                "dateOfBirth": "1997-08-22",
+                "nationality": "Argentina",
+                "section": "Centre-Forward",
+                "position": null,
+                "shirtNumber": null,
+                "lastUpdated": "2024-08-23T09:25:23Z"
+            },
+            "team": {
+                "id": 108,
+                "name": "FC Internazionale Milano",
+                "shortName": "Inter",
+                "tla": "INT",
+                "crest": "https://crests.football-data.org/108.png",
+                "address": "Corso Vittorio Emanuele II 9 Milano 20122",
+                "website": "http://www.inter.it",
+                "founded": 1908,
+                "clubColors": "Blue / Black",
+                "venue": "Stadio Giuseppe Meazza",
+                "lastUpdated": "2021-11-24T14:55:58Z"
+            },
+            "playedMatches": 13,
+            "goals": 8,
+            "assists": 1,
+            "penalties": 1
+        },
+        {
+            "player": {
+                "id": 1556,
+                "name": "Vinicius Junior",
+                "firstName": "",
+                "lastName": "Vinícius Junior",
+                "dateOfBirth": "2000-07-12",
+                "nationality": "Brazil",
+                "section": "Left Winger",
+                "position": null,
+                "shirtNumber": null,
+                "lastUpdated": "2024-08-12T11:57:14Z"
+            },
+            "team": {
+                "id": 86,
+                "name": "Real Madrid CF",
+                "shortName": "Real Madrid",
+                "tla": "RMA",
+                "crest": "https://crests.football-data.org/86.png",
+                "address": "Avenida Concha Espina, 1 Madrid 28036",
+                "website": "http://www.realmadrid.com",
+                "founded": 1902,
+                "clubColors": "White / Purple",
+                "venue": "Estadio Santiago Bernabéu",
+                "lastUpdated": "2022-02-19T08:59:31Z"
+            },
+            "playedMatches": 12,
+            "goals": 8,
+            "assists": 2,
+            "penalties": 1
+        },
+        {
+            "player": {
+                "id": 3373,
+                "name": "Ousmane Dembélé",
+                "firstName": "Ousmane",
+                "lastName": "Dembélé",
+                "dateOfBirth": "1997-05-15",
+                "nationality": "France",
+                "section": "Right Winger",
+                "position": null,
+                "shirtNumber": null,
+                "lastUpdated": "2024-08-12T11:57:19Z"
+            },
+            "team": {
+                "id": 524,
+                "name": "Paris Saint-Germain FC",
+                "shortName": "PSG",
+                "tla": "PSG",
+                "crest": "https://crests.football-data.org/524.png",
+                "address": "24, rue de Commandant Guibaud Paris 7501",
+                "website": "http://www.psg.fr",
+                "founded": 1904,
+                "clubColors": "Red / Blue / White",
+                "venue": "Parc des Princes",
+                "lastUpdated": "2022-02-10T19:07:11Z"
+            },
+            "playedMatches": 13,
+            "goals": 8,
+            "assists": 3,
+            "penalties": null
+        },
+        {
+            "player": {
+                "id": 3374,
+                "name": "Kylian Mbappé",
+                "firstName": "Kylian",
+                "lastName": "Mbappé",
+                "dateOfBirth": "1998-12-20",
+                "nationality": "France",
+                "section": "Centre-Forward",
+                "position": null,
+                "shirtNumber": null,
+                "lastUpdated": "2024-08-12T11:57:19Z"
+            },
+            "team": {
+                "id": 86,
+                "name": "Real Madrid CF",
+                "shortName": "Real Madrid",
+                "tla": "RMA",
+                "crest": "https://crests.football-data.org/86.png",
+                "address": "Avenida Concha Espina, 1 Madrid 28036",
+                "website": "http://www.realmadrid.com",
+                "founded": 1902,
+                "clubColors": "White / Purple",
+                "venue": "Estadio Santiago Bernabéu",
+                "lastUpdated": "2022-02-19T08:59:31Z"
+            },
+            "playedMatches": 14,
+            "goals": 7,
+            "assists": 1,
+            "penalties": null
+        },
+        {
+            "player": {
+                "id": 8924,
+                "name": "Jonathan David",
+                "firstName": "Jonathan",
+                "lastName": "David",
+                "dateOfBirth": "2000-01-14",
+                "nationality": "Canada",
+                "section": "Centre-Forward",
+                "position": null,
+                "shirtNumber": null,
+                "lastUpdated": "2024-10-09T09:41:10Z"
+            },
+            "team": {
+                "id": 521,
+                "name": "Lille OSC",
+                "shortName": "Lille",
+                "tla": "LIL",
+                "crest": "https://crests.football-data.org/521.png",
+                "address": "Grand Rue 59, 780 Camphin-en-Pévèle Lille null",
+                "website": "http://www.losc.fr",
+                "founded": 1944,
+                "clubColors": "White / Red",
+                "venue": "Stade Pierre-Mauroy",
+                "lastUpdated": "2024-07-29T17:19:48Z"
+            },
+            "playedMatches": 10,
+            "goals": 7,
+            "assists": 2,
+            "penalties": 2
+        }
+    ]
+}
