@@ -3,7 +3,7 @@ import pandas as pd # Toujours présent, mais non utilisé. À enlever si non n�
 import json
 import os
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 import tkinter as tk
 from tkinter import ttk, messagebox
 from PIL import Image, ImageTk
@@ -214,6 +214,66 @@ class FootballDataAPI:
         return os.path.join(self.cache_dir, full_name)
 
     def get_match_details(self, match_id):
-
+        """Récupère les détails d'un match spécifique"""
         endpoint = f"/matches/{match_id}"
-        return self._make_request(endpoint)
+        # Ajouter les paramètres pour obtenir les statistiques
+        params = {
+            'include': 'statistics,standings,head2head,odds,referees'
+        }
+        return self._make_request(endpoint, params)
+
+    def get_today_matches(self):
+        """Récupère les matchs autour de la date actuelle (3 jours avant et après)"""
+        today = datetime.now()
+        date_from = (today - timedelta(days=3)).strftime('%Y-%m-%d')
+        date_to = (today + timedelta(days=3)).strftime('%Y-%m-%d')
+        endpoint = "/matches"
+        params = {'dateFrom': date_from, 'dateTo': date_to}
+        return self._make_request(endpoint, params)
+
+    def get_european_scorers(self):
+        """Récupère les meilleurs buteurs des principales compétitions européennes avec calcul des points Golden Boot"""
+        # Dictionnaire des coefficients par championnat
+        competition_coefficients = {
+            # Top 5 (coefficient 2.0)
+            'PL': 2.0,    # Premier League
+            'PD': 2.0,    # La Liga
+            'BL1': 2.0,   # Bundesliga
+            'SA': 2.0,    # Serie A
+            'FL1': 2.0,   # Ligue 1
+            
+            # Championnats intermédiaires (coefficient 1.5)
+            'DED': 1.5,   # Eredivisie
+            'PPL': 1.5,   # Primeira Liga
+            'BJL': 1.5,   # Jupiler Pro League
+            'RPL': 1.5,   # Russian Premier League
+            
+            # Championnats plus faibles (coefficient 1.0)
+            'SSL': 1.0,   # Super League
+            'EL1': 1.0,   # Liga I
+            'CL': 1.0     # Champions League (coefficient 1.0 car c'est une compétition internationale)
+        }
+        
+        all_scorers = []
+        
+        for comp_code, coefficient in competition_coefficients.items():
+            try:
+                scorers_data = self.get_competition_scorers(comp_code, limit=10)
+                if isinstance(scorers_data, dict) and 'scorers' in scorers_data:
+                    for scorer in scorers_data['scorers']:
+                        # Ajouter les informations nécessaires
+                        scorer['competition'] = comp_code
+                        scorer['coefficient'] = coefficient
+                        # Calculer les points Golden Boot
+                        goals = scorer.get('goals', 0)
+                        scorer['golden_boot_points'] = goals * coefficient
+                        all_scorers.append(scorer)
+            except Exception as e:
+                print(f"Erreur lors de la récupération des buteurs pour {comp_code}: {e}")
+                continue
+        
+        # Trier les buteurs par points Golden Boot
+        all_scorers.sort(key=lambda x: x.get('golden_boot_points', 0), reverse=True)
+        
+        # Retourner les 20 meilleurs buteurs
+        return {'scorers': all_scorers[:20]}

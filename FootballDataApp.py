@@ -31,20 +31,47 @@ class FootballDataApp:
         menu_frame = ttk.Frame(self.root, padding=10)
         menu_frame.pack(fill=tk.X)
 
+        # Frame pour les boutons principaux
+        main_buttons_frame = ttk.Frame(menu_frame)
+        main_buttons_frame.pack(fill=tk.X)
+
         # Sélection de compétition
-        ttk.Label(menu_frame, text="Compétition:").pack(side=tk.LEFT)
+        ttk.Label(main_buttons_frame, text="Compétition:").pack(side=tk.LEFT)
         self.competition_var = tk.StringVar()
-        self.competition_combo = ttk.Combobox(menu_frame, textvariable=self.competition_var, width=40, state='readonly')
+        self.competition_combo = ttk.Combobox(main_buttons_frame, textvariable=self.competition_var, width=40, state='readonly')
         self.competition_combo.pack(side=tk.LEFT, padx=5)
         self.competition_combo.bind("<<ComboboxSelected>>", self.on_competition_selected)
 
         # Boutons pour les différentes fonctionnalités
-        self.standings_button = ttk.Button(menu_frame, text="Classement", command=self.show_standings, state=tk.DISABLED)
+        self.standings_button = ttk.Button(main_buttons_frame, text="Classement", command=self.show_standings, state=tk.DISABLED)
         self.standings_button.pack(side=tk.LEFT, padx=5)
-        self.matches_button = ttk.Button(menu_frame, text="Matchs", command=self.show_matches, state=tk.DISABLED)
+        self.matches_button = ttk.Button(main_buttons_frame, text="Matchs", command=self.show_matches, state=tk.DISABLED)
         self.matches_button.pack(side=tk.LEFT, padx=5)
-        self.scorers_button = ttk.Button(menu_frame, text="Buteurs", command=self.show_scorers, state=tk.DISABLED)
+        self.scorers_button = ttk.Button(main_buttons_frame, text="Buteurs", command=self.show_scorers, state=tk.DISABLED)
         self.scorers_button.pack(side=tk.LEFT, padx=5)
+        self.today_matches_button = ttk.Button(main_buttons_frame, text="Matchs de la semaine", command=self.show_today_matches)
+        self.today_matches_button.pack(side=tk.LEFT, padx=5)
+
+        # Frame pour les boutons de statistiques
+        stats_buttons_frame = ttk.Frame(menu_frame)
+        stats_buttons_frame.pack(fill=tk.X, pady=(5, 0))
+
+        # Label pour la section statistiques
+        ttk.Label(stats_buttons_frame, text="Statistiques:", font=("Arial", 9, "bold")).pack(side=tk.LEFT, padx=(0, 10))
+
+        # Boutons pour les statistiques
+        self.comp_stats_button = ttk.Button(stats_buttons_frame, text="Stats Compétition", 
+                                          command=self.show_competition_statistics, state=tk.DISABLED)
+        self.comp_stats_button.pack(side=tk.LEFT, padx=5)
+        
+        self.player_stats_button = ttk.Button(stats_buttons_frame, text="Stats Joueurs", 
+                                            command=self.show_player_statistics, state=tk.DISABLED)
+        self.player_stats_button.pack(side=tk.LEFT, padx=5)
+
+        # Bouton pour la Golden Boot
+        self.golden_boot_button = ttk.Button(stats_buttons_frame, text="Golden Boot", 
+                                           command=self.show_golden_boot)
+        self.golden_boot_button.pack(side=tk.LEFT, padx=5)
 
         # Frame pour le contenu
         self.content_frame = ttk.Frame(self.root, padding=10)
@@ -86,8 +113,10 @@ class FootballDataApp:
             self.standings_button.config(state=tk.NORMAL)
             self.matches_button.config(state=tk.NORMAL)
             self.scorers_button.config(state=tk.NORMAL)
-            # Afficher le classement par défaut
-            self.show_standings()
+            self.comp_stats_button.config(state=tk.NORMAL)
+            self.player_stats_button.config(state=tk.NORMAL)
+            # Afficher les matchs du jour par défaut
+            self.show_today_matches()
         else:
              self.competition_combo.config(state=tk.DISABLED)
              ttk.Label(self.content_frame, text="Aucune compétition disponible ou erreur de chargement.").pack(pady=50)
@@ -106,6 +135,8 @@ class FootballDataApp:
              self.standings_button.config(state=tk.DISABLED)
              self.matches_button.config(state=tk.DISABLED)
              self.scorers_button.config(state=tk.DISABLED)
+             self.comp_stats_button.config(state=tk.DISABLED)
+             self.player_stats_button.config(state=tk.DISABLED)
 
 
     def clear_content(self):
@@ -394,7 +425,6 @@ class FootballDataApp:
                  notebook.add(tab_frame, text=f"{tab_name} ({len(tab_frame.winfo_children())})") # Afficher le nombre de matchs dans le titre de l'onglet
 
 
-    # --- NOUVELLE MÉTHODE ---
     def create_matches_tab(self, parent, matches, team_id):
         """Crée un onglet avec une liste de matchs pour une équipe avec une meilleure structure d'affichage"""
         tab = ttk.Frame(parent)
@@ -422,53 +452,80 @@ class FootballDataApp:
         canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
 
+        # Dictionnaire des couleurs pour les compétitions
+        competition_colors = {
+            'Premier League': '#37003c',  # Violet foncé
+            'La Liga': '#ff0000',         # Rouge
+            'Bundesliga': '#d71e28',      # Rouge foncé
+            'Serie A': '#0c1b33',         # Bleu marine
+            'Ligue 1': '#0d0d0d',         # Noir
+            'Eredivisie': '#ff6b00',      # Orange
+            'Primeira Liga': '#006437',   # Vert foncé
+            'Championship': '#1d428a',    # Bleu
+            'Europa League': '#ffd700',    # Or
+            'Champions League': '#1a1a1a'  # Noir
+        }
+
         # Parcourir les matchs
         for match in matches:
-            # Créer un cadre pour chaque match
-            match_frame = ttk.Frame(scrollable_frame, borderwidth=1, relief="solid")
+            # Créer un cadre pour chaque match avec un style moderne
+            match_frame = ttk.Frame(scrollable_frame, style='Match.TFrame')
             match_frame.pack(fill=tk.X, pady=5, padx=10)
 
-            # Associer un événement de clic au cadre du match pour afficher les statistiques
-            match_frame.bind("<Button-1>", lambda event, match_id=match['id']: self.show_match_statistics(match_id))
+            # Configurer le style pour le cadre du match
+            style = ttk.Style()
+            style.configure('Match.TFrame', background='#f0f0f0', relief='solid', borderwidth=1)
 
-            # Pour montrer que ce cadre est cliquable
-            match_frame.bind("<Enter>",
-                             lambda e, frame=match_frame: frame.configure(cursor="hand2", background="#e0e0e0"))
-            match_frame.bind("<Leave>",
-                             lambda e, frame=match_frame: frame.configure(cursor="", background=self.root.cget(
-                                 "background")))
+            # Associer un événement de clic au cadre du match
+            match_frame.bind("<Button-1>", lambda event, match_id=match['id']: self.show_match_statistics(match_id))
+            match_frame.bind("<Enter>", lambda e, frame=match_frame: frame.configure(style='MatchHover.TFrame'))
+            match_frame.bind("<Leave>", lambda e, frame=match_frame: frame.configure(style='Match.TFrame'))
 
             # Date et compétition
             match_date = datetime.fromisoformat(match['utcDate'].replace('Z', '+00:00'))
             date_str = match_date.strftime('%d/%m/%Y %H:%M')
+            competition_name = match['competition']['name']
 
             header_frame = ttk.Frame(match_frame)
             header_frame.pack(fill=tk.X, pady=5)
 
-            # Lier également l'événement aux widgets enfants
-            header_frame.bind("<Button-1>", lambda event, match_id=match['id']: self.show_match_statistics(match_id))
+            # Style pour la date et la compétition
+            date_label = ttk.Label(header_frame, text=date_str, font=("Arial", 9))
+            date_label.pack(side=tk.LEFT, padx=10)
 
-            ttk.Label(header_frame, text=date_str).pack(side=tk.LEFT, padx=10)
-            ttk.Label(header_frame, text=match['competition']['name']).pack(side=tk.RIGHT, padx=10)
-            status_label = ttk.Label(header_frame, text=match['status'],
-                                     foreground="green" if match['status'] == 'FINISHED' else "orange")
+            # Appliquer la couleur de la compétition
+            comp_color = competition_colors.get(competition_name, '#000000')
+            comp_label = ttk.Label(header_frame, text=competition_name, 
+                                 font=("Arial", 9, "bold"),
+                                 foreground=comp_color)
+            comp_label.pack(side=tk.RIGHT, padx=10)
+
+            # Statut du match avec couleur appropriée
+            status_colors = {
+                'FINISHED': '#28a745',    # Vert
+                'SCHEDULED': '#007bff',   # Bleu
+                'IN_PLAY': '#ffc107',     # Jaune
+                'PAUSED': '#ffc107',      # Jaune
+                'POSTPONED': '#dc3545',   # Rouge
+                'CANCELLED': '#dc3545'    # Rouge
+            }
+            status = match['status']
+            status_color = status_colors.get(status, '#6c757d')  # Gris par défaut
+            status_label = ttk.Label(header_frame, text=status,
+                                   foreground=status_color,
+                                   font=("Arial", 9, "bold"))
             status_label.pack(side=tk.RIGHT, padx=5)
 
-            # Lier également les labels
-            status_label.bind("<Button-1>", lambda event, match_id=match['id']: self.show_match_statistics(match_id))
-
-            # Structure centrée pour les équipes et le score
+            # Structure principale pour les équipes et le score
             teams_score_frame = ttk.Frame(match_frame)
             teams_score_frame.pack(fill=tk.X, pady=10, padx=5)
-            teams_score_frame.bind("<Button-1>",
-                                   lambda event, match_id=match['id']: self.show_match_statistics(match_id))
 
             # Configurer les colonnes pour avoir un alignement centré
-            teams_score_frame.columnconfigure(0, weight=2)  # Équipe domicile
+            teams_score_frame.columnconfigure(0, weight=1)  # Équipe domicile
             teams_score_frame.columnconfigure(1, weight=1)  # Logo domicile
             teams_score_frame.columnconfigure(2, weight=1)  # Score
             teams_score_frame.columnconfigure(3, weight=1)  # Logo extérieur
-            teams_score_frame.columnconfigure(4, weight=2)  # Équipe extérieure
+            teams_score_frame.columnconfigure(4, weight=1)  # Équipe extérieure
 
             # Récupérer les données des équipes
             home_id = match['homeTeam']['id']
@@ -479,200 +536,74 @@ class FootballDataApp:
             away_name = match['awayTeam']['name']
             away_logo_url = match['awayTeam'].get('crest')
 
-            # Charger les logos
-            home_logo = self.load_team_logo(home_id, home_logo_url)
-            away_logo = self.load_team_logo(away_id, away_logo_url)
+            # Charger les logos avec une taille uniforme
+            logo_size = (40, 40)
+            home_logo = self.load_team_logo(home_id, home_logo_url, size=logo_size)
+            away_logo = self.load_team_logo(away_id, away_logo_url, size=logo_size)
 
-            # Nom de l'équipe domicile (colonne 0)
-            if str(home_id) == team_id:
-                home_label = ttk.Label(teams_score_frame, text=home_name, font=("Arial", 10, "bold"), foreground="blue",
-                                       anchor="e")
-            else:
-                home_label = ttk.Label(teams_score_frame, text=home_name, font=("Arial", 10), anchor="e")
-            home_label.grid(row=0, column=0, sticky="e", padx=5)
-            home_label.bind("<Button-1>", lambda event, match_id=match['id']: self.show_match_statistics(match_id))
+            # Créer des frames pour chaque colonne
+            home_team_frame = ttk.Frame(teams_score_frame)
+            home_team_frame.grid(row=0, column=0, sticky="e", padx=5)
+            
+            home_logo_frame = ttk.Frame(teams_score_frame)
+            home_logo_frame.grid(row=0, column=1, sticky="e", padx=5)
+            
+            score_frame = ttk.Frame(teams_score_frame)
+            score_frame.grid(row=0, column=2, sticky="nsew", padx=10)
+            
+            away_logo_frame = ttk.Frame(teams_score_frame)
+            away_logo_frame.grid(row=0, column=3, sticky="w", padx=5)
+            
+            away_team_frame = ttk.Frame(teams_score_frame)
+            away_team_frame.grid(row=0, column=4, sticky="w", padx=5)
 
-            # Logo équipe domicile (colonne 1)
+            # Nom de l'équipe domicile
+            home_style = "bold" if str(home_id) == str(team_id) else "normal"
+            home_color = "blue" if str(home_id) == str(team_id) else "black"
+            home_label = ttk.Label(home_team_frame, text=home_name,
+                                 font=("Arial", 10, home_style),
+                                 foreground=home_color)
+            home_label.pack(side=tk.RIGHT)
+
+            # Logo équipe domicile
             if home_logo:
-                home_logo_label = ttk.Label(teams_score_frame, image=home_logo)
-                home_logo_label.image = home_logo  # Pour éviter que le garbage collector ne supprime l'image
-                home_logo_label.grid(row=0, column=1, padx=5)
-                home_logo_label.bind("<Button-1>",
-                                     lambda event, match_id=match['id']: self.show_match_statistics(match_id))
+                home_logo_label = ttk.Label(home_logo_frame, image=home_logo)
+                home_logo_label.image = home_logo
+                home_logo_label.pack(side=tk.RIGHT)
 
-            # Score au centre (colonne 2)
+            # Score au centre
             if match['status'] == 'FINISHED':
                 score_text = f"{match['score']['fullTime']['home']} - {match['score']['fullTime']['away']}"
+                score_color = '#28a745'  # Vert pour les matchs terminés
             else:
                 score_text = "vs"
+                score_color = '#6c757d'  # Gris pour les matchs à venir
 
-            score_label = ttk.Label(teams_score_frame, text=score_text, font=("Arial", 12, "bold"))
-            score_label.grid(row=0, column=2, padx=10)
-            score_label.bind("<Button-1>", lambda event, match_id=match['id']: self.show_match_statistics(match_id))
+            score_label = ttk.Label(score_frame, text=score_text,
+                                  font=("Arial", 12, "bold"),
+                                  foreground=score_color)
+            score_label.pack(expand=True)
 
-            # Logo équipe extérieure (colonne 3)
+            # Logo équipe extérieure
             if away_logo:
-                away_logo_label = ttk.Label(teams_score_frame, image=away_logo)
+                away_logo_label = ttk.Label(away_logo_frame, image=away_logo)
                 away_logo_label.image = away_logo
-                away_logo_label.grid(row=0, column=3, padx=5)
-                away_logo_label.bind("<Button-1>",
-                                     lambda event, match_id=match['id']: self.show_match_statistics(match_id))
+                away_logo_label.pack(side=tk.LEFT)
 
-            # Nom de l'équipe extérieure (colonne 4)
-            if str(away_id) == team_id:
-                away_label = ttk.Label(teams_score_frame, text=away_name, font=("Arial", 10, "bold"), foreground="blue",
-                                       anchor="w")
-            else:
-                away_label = ttk.Label(teams_score_frame, text=away_name, font=("Arial", 10), anchor="w")
-            away_label.grid(row=0, column=4, sticky="w", padx=5)
-            away_label.bind("<Button-1>", lambda event, match_id=match['id']: self.show_match_statistics(match_id))
+            # Nom de l'équipe extérieure
+            away_style = "bold" if str(away_id) == str(team_id) else "normal"
+            away_color = "blue" if str(away_id) == str(team_id) else "black"
+            away_label = ttk.Label(away_team_frame, text=away_name,
+                                 font=("Arial", 10, away_style),
+                                 foreground=away_color)
+            away_label.pack(side=tk.LEFT)
 
             # Ajouter une étiquette pour indiquer que le clic affichera les statistiques
-            if match['status'] == 'FINISHED':  # Seulement pour les matchs terminés
+            if match['status'] == 'FINISHED':
                 info_label = ttk.Label(match_frame, text="Cliquez pour voir les statistiques",
-                                       font=("Arial", 8, "italic"), foreground="grey")
+                                     font=("Arial", 8, "italic"),
+                                     foreground="grey")
                 info_label.pack(pady=(0, 5))
-                info_label.bind("<Button-1>", lambda event, match_id=match['id']: self.show_match_statistics(match_id))
-
-        return tab
-
-
-
-        def _on_mousewheel(event):
-            # Ajuster la sensibilité si nécessaire (delta est +/- 120 sur Windows)
-            canvas.yview_scroll(int(-1*(event.delta/120)), "units")
-        # Lier sur le canvas ET le frame interne pour une meilleure couverture
-        for widget in [canvas, scrollable_frame]:
-             widget.bind_all("<MouseWheel>", _on_mousewheel) # Utiliser bind_all peut être trop large, préférer bind sur le widget spécifique
-
-        canvas_window = canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-        # Ajuster la largeur du frame interne à celle du canvas lors du redimensionnement
-        def _on_canvas_configure(event):
-            canvas.itemconfig(canvas_window, width=event.width)
-        canvas.bind("<Configure>", _on_canvas_configure)
-
-
-        canvas.configure(yscrollcommand=scrollbar.set)
-
-        canvas.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
-
-        # Dictionnaire pour stocker les références d'images pour cet onglet
-        tab_logo_refs = {}
-
-        # Parcourir les matchs
-        for i, match in enumerate(matches):
-            # Créer un cadre pour chaque match
-            match_frame = ttk.Frame(scrollable_frame, borderwidth=1, relief="groove") # Relief différent
-            match_frame.pack(fill=tk.X, pady=(5 if i > 0 else 0), padx=5) # Pas de pad y pour le premier
-
-            home_team = match.get('homeTeam', {})
-            away_team = match.get('awayTeam', {})
-            competition = match.get('competition', {})
-            score = match.get('score', {}).get('fullTime', {})
-            status = match.get('status', 'N/A')
-
-            # --- Header: Date & Compétition ---
-            header_frame = ttk.Frame(match_frame, padding=(5,2))
-            header_frame.pack(fill=tk.X)
-
-            date_str = "Date inconnue"
-            if match.get('utcDate'):
-                try:
-                    match_date = datetime.fromisoformat(match['utcDate'].replace('Z', '+00:00'))
-                    # Convertir en heure locale
-                    local_date = match_date.astimezone(None)
-                    date_str = local_date.strftime('%d/%m/%Y %H:%M')
-                except ValueError:
-                     date_str = match['utcDate'] # Afficher tel quel si format inconnu
-
-            ttk.Label(header_frame, text=date_str, font=("Arial", 8)).pack(side=tk.LEFT)
-            comp_name = competition.get('name', 'Compétition inconnue')
-            ttk.Label(header_frame, text=comp_name, font=("Arial", 8, "italic")).pack(side=tk.RIGHT)
-
-            # Séparateur léger
-            ttk.Separator(match_frame, orient='horizontal').pack(fill=tk.X, padx=5, pady=2)
-
-            # --- Body Équipes Score
-            teams_frame = ttk.Frame(match_frame, padding=(5,5))
-            teams_frame.pack(fill=tk.X)
-
-            # Configurer les colonnes pour aligner
-            teams_frame.columnconfigure(0, weight=4, uniform='team_info') # Équipe domicile
-            teams_frame.columnconfigure(1, weight=1, uniform='team_info') # Score
-            teams_frame.columnconfigure(2, weight=4, uniform='team_info') # Équipe extérieure
-
-            #Équipe domicile
-            home_frame = ttk.Frame(teams_frame)
-            home_frame.grid(row=0, column=0, sticky="ew")
-
-            home_id = str(home_team.get('id', ''))
-            home_logo_url = home_team.get('crest')
-            home_logo_photo = self.load_team_logo(home_id, home_logo_url, size=(24,24)) # Logo un peu plus petit
-
-            if home_logo_photo:
-                logo_label_h = ttk.Label(home_frame, image=home_logo_photo)
-                logo_label_h.pack(side=tk.LEFT, padx=(0,5))
-                # Garder la référence
-                ref_key = f"match_{i}_home_{home_id}"
-                tab_logo_refs[ref_key] = home_logo_photo
-
-
-            home_name = home_team.get('name', 'N/A')
-            home_label = ttk.Label(home_frame, text=home_name, anchor="w", font=("Arial", 10))
-            if home_id == team_id_str: # Comparer les chaînes
-                home_label.config(font=("Arial", 10, "bold")) # Mettre en gras si c'est l'équipe focus
-            home_label.pack(side=tk.LEFT, fill=tk.X, expand=True)
-
-
-            # -- Score --
-            score_frame = ttk.Frame(teams_frame)
-            score_frame.grid(row=0, column=1, sticky="nsew")
-
-            score_text = "vs"
-            home_score = score.get('home')
-            away_score = score.get('away')
-
-            if status == 'FINISHED' and home_score is not None and away_score is not None:
-                score_text = f"{home_score} - {away_score}"
-            elif status in ['IN_PLAY', 'PAUSED'] and home_score is not None and away_score is not None:
-                 score_text = f"{home_score} - {away_score} ({status})" # Afficher score live
-            elif status == 'SCHEDULED' or status == 'TIMED':
-                 # score_text = match_date.strftime('%H:%M') if 'match_date' in locals() else 'À venir'
-                 score_text = "vs" # Gardons 'vs' pour la clarté
-            elif status == 'POSTPONED':
-                 score_text = "Reporté"
-            elif status == 'CANCELLED':
-                 score_text = "Annulé"
-
-
-            score_label = ttk.Label(score_frame, text=score_text, font=("Arial", 11, "bold"), anchor="center")
-            score_label.pack(fill=tk.BOTH, expand=True)
-
-            #Équipe extérieure
-            away_frame = ttk.Frame(teams_frame)
-            away_frame.grid(row=0, column=2, sticky="ew")
-
-            away_id = str(away_team.get('id', ''))
-            away_logo_url = away_team.get('crest')
-            away_logo_photo = self.load_team_logo(away_id, away_logo_url, size=(24,24))
-
-            away_name = away_team.get('name', 'N/A')
-            away_label = ttk.Label(away_frame, text=away_name, anchor="e", font=("Arial", 10))
-            if away_id == team_id_str: # Comparer les chaînes
-                away_label.config(font=("Arial", 10, "bold"))
-            away_label.pack(side=tk.RIGHT, fill=tk.X, expand=True)
-
-            if away_logo_photo:
-                logo_label_a = ttk.Label(away_frame, image=away_logo_photo)
-                logo_label_a.pack(side=tk.RIGHT, padx=(5,0))
-                # Garder la référence
-                ref_key = f"match_{i}_away_{away_id}"
-                tab_logo_refs[ref_key] = away_logo_photo
-
-
-        # Stocker les références des logos avec le widget tab lui-même pour éviter GC
-        tab.tab_logo_refs = tab_logo_refs
 
         return tab
 
@@ -926,7 +857,9 @@ class FootballDataApp:
             home_logo_label.grid(row=0, column=1, padx=5)
 
         # Score
-        score_text = f"{match['score']['fullTime']['home']} - {match['score']['fullTime']['away']}"
+        home_score = match['score']['fullTime']['home'] or 0
+        away_score = match['score']['fullTime']['away'] or 0
+        score_text = f"{home_score} - {away_score}"
         ttk.Label(score_frame, text=score_text, font=("Arial", 14, "bold")).grid(row=0, column=2, padx=20)
 
         # Logo équipe extérieure
@@ -938,26 +871,33 @@ class FootballDataApp:
         # Nom de l'équipe extérieure
         ttk.Label(score_frame, text=away_team['name'], font=("Arial", 11, "bold")).grid(row=0, column=4, padx=10)
 
-        # Extraire et structurer les statistiques
-        # Créer des statistiques de démonstration si elles ne sont pas disponibles dans l'API
-        # Note: L'API football-data.org ne fournit pas toujours des statistiques détaillées,
-        # donc nous allons créer des données de démonstration basées sur le score
+        # Simuler des statistiques réalistes basées sur le score
+        total_goals = home_score + away_score
+        winning_team = 'home' if home_score > away_score else 'away' if away_score > home_score else None
 
-        home_score = match['score']['fullTime']['home'] or 0
-        away_score = match['score']['fullTime']['away'] or 0
+        # Fonction pour simuler des statistiques réalistes
+        def simulate_stats(base_value, winner_bonus=0, loser_penalty=0):
+            if winning_team == 'home':
+                return (base_value + winner_bonus, base_value - loser_penalty)
+            elif winning_team == 'away':
+                return (base_value - loser_penalty, base_value + winner_bonus)
+            return (base_value, base_value)  # Match nul
 
-        # Créer des statistiques simulées basées sur le score
+        # Simuler des statistiques plus réalistes
         stats = {
-            'Possession (%)': (55, 45) if home_score >= away_score else (45, 55),
-            'Tirs': (home_score * 3 + 5, away_score * 3 + 5),
-            'Tirs cadrés': (home_score * 2 + 2, away_score * 2 + 2),
-            'Corners': (home_score + 4, away_score + 4),
-            'Fautes': (8, 10),
-            'Cartons jaunes': (min(home_score, 3), min(away_score, 3)),
-            'Cartons rouges': (0 if home_score < 3 else 1, 0 if away_score < 3 else 1),
-            'Hors-jeu': (2, 3),
-            'Passes': (450, 400) if home_score >= away_score else (400, 450),
-            'Précision passes (%)': (85, 82) if home_score >= away_score else (82, 85)
+            'Possession (%)': simulate_stats(50, 5, 5),
+            'Tirs': (home_score * 3 + 8, away_score * 3 + 8),
+            'Tirs cadrés': (home_score + 3, away_score + 3),
+            'Corners': simulate_stats(6, 2, 1),
+            'Fautes': simulate_stats(12, -2, 2),  # L'équipe qui gagne fait généralement moins de fautes
+            'Cartons jaunes': (min(total_goals + 1, 3), min(total_goals + 1, 3)),
+            'Cartons rouges': (1 if home_score < away_score and total_goals > 3 else 0,
+                              1 if away_score < home_score and total_goals > 3 else 0),
+            'Hors-jeu': simulate_stats(3, 1, 0),
+            'Passes': simulate_stats(400, 50, 50),
+            'Précision passes (%)': simulate_stats(80, 5, 5),
+            'Duels gagnés': simulate_stats(52, 5, 5),
+            'Distance parcourue (km)': simulate_stats(110, 2, 2),
         }
 
         # Créer un notebook pour organiser différentes visualisations
@@ -994,7 +934,7 @@ class FootballDataApp:
         fig_bar, ax_bar = plt.subplots(figsize=(8, 6))
 
         # Sélectionner quelques statistiques clés pour le graphique
-        key_stats = ['Possession (%)', 'Tirs', 'Tirs cadrés', 'Corners', 'Cartons jaunes']
+        key_stats = ['Possession (%)', 'Tirs', 'Tirs cadrés', 'Corners', 'Duels gagnés']
         home_values = [stats[stat][0] for stat in key_stats]
         away_values = [stats[stat][1] for stat in key_stats]
 
@@ -1030,31 +970,30 @@ class FootballDataApp:
         # Sélectionner des statistiques pour le radar (convertir pour être sur la même échelle)
         radar_stats = [
             'Possession (%)',
-            'Tirs (normalisé)',
+            'Duels gagnés',
+            'Précision passes (%)',
             'Tirs cadrés (normalisé)',
-            'Corners (normalisé)',
-            'Précision passes (%)'
+            'Distance parcourue (km)'
         ]
 
         # Normaliser les valeurs pour qu'elles soient sur la même échelle (0-100)
-        max_shots = max(stats['Tirs'])
-        max_shots_on_target = max(stats['Tirs cadrés'])
-        max_corners = max(stats['Corners'])
+        max_shots = max(stats['Tirs cadrés'])
+        max_distance = max(stats['Distance parcourue (km)'])
 
         radar_home = [
             stats['Possession (%)'][0],
-            stats['Tirs'][0] / max_shots * 100,
-            stats['Tirs cadrés'][0] / max_shots_on_target * 100,
-            stats['Corners'][0] / max_corners * 100,
-            stats['Précision passes (%)'][0]
+            stats['Duels gagnés'][0],
+            stats['Précision passes (%)'][0],
+            stats['Tirs cadrés'][0] / max_shots * 100,
+            stats['Distance parcourue (km)'][0] / max_distance * 100
         ]
 
         radar_away = [
             stats['Possession (%)'][1],
-            stats['Tirs'][1] / max_shots * 100,
-            stats['Tirs cadrés'][1] / max_shots_on_target * 100,
-            stats['Corners'][1] / max_corners * 100,
-            stats['Précision passes (%)'][1]
+            stats['Duels gagnés'][1],
+            stats['Précision passes (%)'][1],
+            stats['Tirs cadrés'][1] / max_shots * 100,
+            stats['Distance parcourue (km)'][1] / max_distance * 100
         ]
 
         # Nombre de variables
@@ -1117,6 +1056,463 @@ class FootballDataApp:
         canvas_pie.draw()
         canvas_pie.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
+    def show_today_matches(self):
+        """Affiche les matchs de la semaine"""
+        self.clear_content()
+        ttk.Label(self.content_frame, text="Matchs de la semaine",
+                  font=("Arial", 14, "bold")).pack(pady=10)
+
+        # Indicateur de chargement
+        loading_label = ttk.Label(self.content_frame, text="Chargement des matchs de la semaine...")
+        loading_label.pack(pady=20)
+        self.root.update()
+
+        # Fonction pour charger les données en arrière-plan
+        def _load_data():
+            matches_data = self.api.get_today_matches()
+            self.root.after(0, self._display_today_matches, matches_data, loading_label)
+
+        # Lancer le chargement dans un thread
+        threading.Thread(target=_load_data, daemon=True).start()
+
+    def _display_today_matches(self, matches_data, loading_label):
+        """Met à jour l'UI avec les matchs du jour"""
+        if loading_label.winfo_exists():
+            loading_label.destroy()
+
+        if isinstance(matches_data, dict) and 'error' in matches_data:
+            messagebox.showerror("Erreur API", f"Impossible de charger les matchs du jour : {matches_data['error']}")
+            ttk.Label(self.content_frame, text=f"Erreur chargement matchs: {matches_data['error']}").pack()
+            return
+
+        matches = matches_data.get('matches', [])
+        if matches:
+            matches_tab_content = self.create_matches_tab(self.content_frame, matches, None)
+            if matches_tab_content:
+                matches_tab_content.pack(fill=tk.BOTH, expand=True)
+        else:
+            ttk.Label(self.content_frame, text="Aucun match prévu aujourd'hui.").pack(pady=20)
+
+    def show_competition_statistics(self):
+        """Affiche les statistiques détaillées de la compétition sélectionnée"""
+        if not self.selected_competition:
+            messagebox.showinfo("Information", "Veuillez d'abord sélectionner une compétition")
+            return
+
+        # Créer une nouvelle fenêtre pour les statistiques
+        stats_window = tk.Toplevel(self.root)
+        stats_window.title(f"Statistiques - {self.selected_competition['name']}")
+        stats_window.geometry("1000x800")
+
+        # Créer un notebook pour organiser différentes visualisations
+        notebook = ttk.Notebook(stats_window)
+        notebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        # Récupérer les données nécessaires
+        standings_data = self.api.get_competition_standings(self.selected_competition['code'])
+        scorers_data = self.api.get_competition_scorers(self.selected_competition['code'], limit=20)
+
+        if isinstance(standings_data, dict) and 'standings' in standings_data:
+            standings = standings_data['standings'][0]['table'] if standings_data['standings'] else []
+        else:
+            standings = []
+
+        if isinstance(scorers_data, dict) and 'scorers' in scorers_data:
+            scorers = scorers_data['scorers']
+        else:
+            scorers = []
+
+        # 1. Graphique des points
+        points_frame = ttk.Frame(notebook)
+        notebook.add(points_frame, text="Points")
+
+        fig_points, ax_points = plt.subplots(figsize=(12, 6))
+        teams = [team['team']['name'] for team in standings]
+        points = [team['points'] for team in standings]
+        
+        # Créer le graphique à barres
+        bars = ax_points.bar(teams, points)
+        
+        # Personnaliser le graphique
+        ax_points.set_title('Points par équipe')
+        ax_points.set_xlabel('Équipes')
+        ax_points.set_ylabel('Points')
+        plt.xticks(rotation=45, ha='right')
+        
+        # Ajouter les valeurs sur les barres
+        for bar in bars:
+            height = bar.get_height()
+            ax_points.text(bar.get_x() + bar.get_width()/2., height,
+                         f'{int(height)}', ha='center', va='bottom')
+
+        # Ajuster la mise en page
+        plt.tight_layout()
+        
+        # Ajouter le graphique à l'interface Tkinter
+        canvas_points = FigureCanvasTkAgg(fig_points, master=points_frame)
+        canvas_points.draw()
+        canvas_points.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+
+        # 2. Graphique des buts
+        goals_frame = ttk.Frame(notebook)
+        notebook.add(goals_frame, text="Buts")
+
+        fig_goals, (ax_goals_for, ax_goals_against) = plt.subplots(2, 1, figsize=(12, 8))
+        
+        goals_for = [team['goalsFor'] for team in standings]
+        goals_against = [team['goalsAgainst'] for team in standings]
+        
+        # Graphique des buts marqués
+        bars_for = ax_goals_for.bar(teams, goals_for, color='green')
+        ax_goals_for.set_title('Buts marqués par équipe')
+        ax_goals_for.set_xticklabels([])
+        ax_goals_for.set_ylabel('Buts marqués')
+        
+        # Ajouter les valeurs sur les barres
+        for bar in bars_for:
+            height = bar.get_height()
+            ax_goals_for.text(bar.get_x() + bar.get_width()/2., height,
+                            f'{int(height)}', ha='center', va='bottom')
+        
+        # Graphique des buts encaissés
+        bars_against = ax_goals_against.bar(teams, goals_against, color='red')
+        ax_goals_against.set_title('Buts encaissés par équipe')
+        ax_goals_against.set_xticklabels(teams, rotation=45, ha='right')
+        ax_goals_against.set_ylabel('Buts encaissés')
+        
+        # Ajouter les valeurs sur les barres
+        for bar in bars_against:
+            height = bar.get_height()
+            ax_goals_against.text(bar.get_x() + bar.get_width()/2., height,
+                                f'{int(height)}', ha='center', va='bottom')
+
+        plt.tight_layout()
+        
+        canvas_goals = FigureCanvasTkAgg(fig_goals, master=goals_frame)
+        canvas_goals.draw()
+        canvas_goals.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+
+        # 3. Graphique des victoires/défaites
+        record_frame = ttk.Frame(notebook)
+        notebook.add(record_frame, text="V/N/D")
+
+        fig_record, ax_record = plt.subplots(figsize=(12, 6))
+        
+        wins = [team['won'] for team in standings]
+        draws = [team['draw'] for team in standings]
+        losses = [team['lost'] for team in standings]
+        
+        # Créer le graphique empilé
+        ax_record.bar(teams, wins, label='Victoires', color='green')
+        ax_record.bar(teams, draws, bottom=wins, label='Nuls', color='gray')
+        ax_record.bar(teams, losses, bottom=[w + d for w, d in zip(wins, draws)], label='Défaites', color='red')
+        
+        ax_record.set_title('Bilan des matchs par équipe')
+        ax_record.set_xlabel('Équipes')
+        ax_record.set_ylabel('Nombre de matchs')
+        plt.xticks(rotation=45, ha='right')
+        ax_record.legend()
+        
+        plt.tight_layout()
+        
+        canvas_record = FigureCanvasTkAgg(fig_record, master=record_frame)
+        canvas_record.draw()
+        canvas_record.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+
+        # 4. Graphique des buteurs
+        scorers_frame = ttk.Frame(notebook)
+        notebook.add(scorers_frame, text="Buteurs")
+
+        fig_scorers, ax_scorers = plt.subplots(figsize=(12, 6))
+        
+        player_names = [f"{scorer['player']['name']} ({scorer['team']['tla']})" for scorer in scorers[:10]]
+        goals = [scorer['goals'] for scorer in scorers[:10]]
+        
+        # Créer le graphique à barres horizontales
+        bars_scorers = ax_scorers.barh(player_names, goals)
+        
+        ax_scorers.set_title('Top 10 des buteurs')
+        ax_scorers.set_xlabel('Nombre de buts')
+        
+        # Ajouter les valeurs sur les barres
+        for bar in bars_scorers:
+            width = bar.get_width()
+            ax_scorers.text(width, bar.get_y() + bar.get_height()/2.,
+                          f'{int(width)}', ha='left', va='center')
+        
+        plt.tight_layout()
+        
+        canvas_scorers = FigureCanvasTkAgg(fig_scorers, master=scorers_frame)
+        canvas_scorers.draw()
+        canvas_scorers.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+
+    def show_player_statistics(self, player_id=None):
+        """Affiche les statistiques détaillées d'un joueur"""
+        if not self.selected_competition:
+            messagebox.showinfo("Information", "Veuillez d'abord sélectionner une compétition")
+            return
+
+        # Récupérer les données des buteurs
+        scorers_data = self.api.get_competition_scorers(self.selected_competition['code'], limit=50)
+
+        if not isinstance(scorers_data, dict) or 'scorers' not in scorers_data:
+            messagebox.showerror("Erreur", "Impossible de récupérer les statistiques des joueurs")
+            return
+
+        scorers = scorers_data['scorers']
+
+        # Créer une nouvelle fenêtre pour les statistiques
+        stats_window = tk.Toplevel(self.root)
+        stats_window.title(f"Statistiques des joueurs - {self.selected_competition['name']}")
+        stats_window.geometry("1000x800")
+
+        # Créer un notebook pour organiser différentes visualisations
+        notebook = ttk.Notebook(stats_window)
+        notebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        # 1. Graphique Buts vs Matchs joués
+        goals_frame = ttk.Frame(notebook)
+        notebook.add(goals_frame, text="Buts/Matchs")
+
+        fig_goals, ax_goals = plt.subplots(figsize=(12, 6))
+        
+        player_names = [f"{scorer['player']['name']} ({scorer['team']['tla']})" for scorer in scorers[:15]]
+        goals = [scorer['goals'] for scorer in scorers[:15]]
+        matches = [scorer.get('playedMatches', 0) for scorer in scorers[:15]]
+        
+        x = range(len(player_names))
+        width = 0.35
+        
+        bars1 = ax_goals.bar([i - width/2 for i in x], goals, width, label='Buts', color='blue')
+        bars2 = ax_goals.bar([i + width/2 for i in x], matches, width, label='Matchs joués', color='green')
+        
+        ax_goals.set_ylabel('Nombre')
+        ax_goals.set_title('Buts et matchs joués par joueur')
+        ax_goals.set_xticks(x)
+        ax_goals.set_xticklabels(player_names, rotation=45, ha='right')
+        ax_goals.legend()
+        
+        plt.tight_layout()
+        
+        canvas_goals = FigureCanvasTkAgg(fig_goals, master=goals_frame)
+        canvas_goals.draw()
+        canvas_goals.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+
+        # 2. Graphique de ratio buts/match
+        ratio_frame = ttk.Frame(notebook)
+        notebook.add(ratio_frame, text="Ratio buts/match")
+
+        fig_ratio, ax_ratio = plt.subplots(figsize=(12, 6))
+        
+        ratios = [g/m if m > 0 else 0 for g, m in zip(goals, matches)]
+        bars_ratio = ax_ratio.bar(player_names, ratios)
+        
+        ax_ratio.set_title('Ratio buts par match')
+        ax_ratio.set_xlabel('Joueurs')
+        ax_ratio.set_ylabel('Buts par match')
+        plt.xticks(rotation=45, ha='right')
+        
+        # Ajouter les valeurs sur les barres
+        for bar in bars_ratio:
+            height = bar.get_height()
+            ax_ratio.text(bar.get_x() + bar.get_width()/2., height,
+                         f'{height:.2f}', ha='center', va='bottom')
+        
+        plt.tight_layout()
+        
+        canvas_ratio = FigureCanvasTkAgg(fig_ratio, master=ratio_frame)
+        canvas_ratio.draw()
+        canvas_ratio.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+
+        # 3. Tableau des statistiques détaillées
+        table_frame = ttk.Frame(notebook)
+        notebook.add(table_frame, text="Détails")
+
+        # Créer le tableau
+        columns = ('rank', 'player', 'team', 'goals', 'matches', 'ratio')
+        tree = ttk.Treeview(table_frame, columns=columns, show='headings', height=20)
+
+        tree.heading('rank', text='#')
+        tree.heading('player', text='Joueur')
+        tree.heading('team', text='Équipe')
+        tree.heading('goals', text='Buts')
+        tree.heading('matches', text='Matchs')
+        tree.heading('ratio', text='Ratio')
+
+        tree.column('rank', width=50, anchor='center')
+        tree.column('player', width=200)
+        tree.column('team', width=150)
+        tree.column('goals', width=80, anchor='center')
+        tree.column('matches', width=80, anchor='center')
+        tree.column('ratio', width=80, anchor='center')
+
+        for i, scorer in enumerate(scorers, 1):
+            matches_played = scorer.get('playedMatches', 0)
+            ratio = f"{scorer['goals']/matches_played:.2f}" if matches_played > 0 else "N/A"
+            
+            tree.insert('', tk.END, values=(
+                i,
+                scorer['player']['name'],
+                scorer['team']['name'],
+                scorer['goals'],
+                matches_played,
+                ratio
+            ))
+
+        tree.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        # Ajouter une scrollbar
+        scrollbar = ttk.Scrollbar(table_frame, orient=tk.VERTICAL, command=tree.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        tree.configure(yscrollcommand=scrollbar.set)
+
+    def show_golden_boot(self):
+        """Affiche les meilleurs buteurs d'Europe (Golden Boot)"""
+        self.clear_content()
+        ttk.Label(self.content_frame, text="Golden Boot - Meilleurs Buteurs d'Europe",
+                  font=("Arial", 14, "bold")).pack(pady=10)
+
+        # Indicateur de chargement
+        loading_label = ttk.Label(self.content_frame, text="Chargement des données...")
+        loading_label.pack(pady=20)
+        self.root.update()
+
+        # Fonction pour charger les données en arrière-plan
+        def _load_data():
+            scorers_data = self.api.get_european_scorers()
+            self.root.after(0, self._display_golden_boot, scorers_data, loading_label)
+
+        # Lancer le chargement dans un thread
+        threading.Thread(target=_load_data, daemon=True).start()
+
+    def _display_golden_boot(self, scorers_data, loading_label):
+        """Met à jour l'UI avec les meilleurs buteurs d'Europe"""
+        if loading_label.winfo_exists():
+            loading_label.destroy()
+
+        if isinstance(scorers_data, dict) and 'error' in scorers_data:
+            messagebox.showerror("Erreur API", f"Impossible de charger les données : {scorers_data['error']}")
+            ttk.Label(self.content_frame, text=f"Erreur chargement données: {scorers_data['error']}").pack()
+            return
+
+        # Créer un notebook pour différentes visualisations
+        notebook = ttk.Notebook(self.content_frame)
+        notebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        # 1. Tableau des buteurs
+        table_frame = ttk.Frame(notebook)
+        notebook.add(table_frame, text="Classement")
+
+        # Créer le tableau
+        columns = ('rank', 'player', 'team_logo', 'team', 'competition', 'goals', 'coefficient', 'points', 'assists', 'matches')
+        tree = ttk.Treeview(table_frame, columns=columns, show='headings', height=20)
+
+        # Configurer les colonnes
+        tree.heading('rank', text='#')
+        tree.column('rank', width=40, anchor='center')
+        tree.heading('player', text='Joueur')
+        tree.column('player', width=200)
+        tree.heading('team_logo', text='')
+        tree.column('team_logo', width=40, anchor='center')
+        tree.heading('team', text='Équipe')
+        tree.column('team', width=150)
+        tree.heading('competition', text='Compétition')
+        tree.column('competition', width=100)
+        tree.heading('goals', text='Buts')
+        tree.column('goals', width=60, anchor='center')
+        tree.heading('coefficient', text='Coeff.')
+        tree.column('coefficient', width=60, anchor='center')
+        tree.heading('points', text='Points')
+        tree.column('points', width=60, anchor='center')
+        tree.heading('assists', text='Passes D.')
+        tree.column('assists', width=80, anchor='center')
+        tree.heading('matches', text='Matchs')
+        tree.column('matches', width=60, anchor='center')
+
+        # Ajouter une scrollbar
+        scrollbar = ttk.Scrollbar(table_frame, orient="vertical", command=tree.yview)
+        scrollbar.pack(side='right', fill='y')
+        tree.configure(yscrollcommand=scrollbar.set)
+
+        tree.pack(side='left', fill='both', expand=True)
+
+        # Dictionnaire des noms de compétitions
+        competition_names = {
+            'PL': 'Premier League',
+            'PD': 'La Liga',
+            'BL1': 'Bundesliga',
+            'SA': 'Serie A',
+            'FL1': 'Ligue 1',
+            'DED': 'Eredivisie',
+            'PPL': 'Primeira Liga',
+            'BJL': 'Jupiler Pro League',
+            'RPL': 'Russian Premier League',
+            'SSL': 'Super League',
+            'EL1': 'Liga I',
+            'CL': 'Champions League'
+        }
+
+        # Ajouter les données
+        for i, scorer in enumerate(scorers_data.get('scorers', []), 1):
+            player_info = scorer.get('player', {})
+            team_info = scorer.get('team', {})
+            team_id = team_info.get('id')
+            team_logo_url = team_info.get('crest')
+            competition = competition_names.get(scorer.get('competition', ''), scorer.get('competition', ''))
+
+            if not team_id: continue
+
+            item_id = tree.insert('', tk.END, values=(
+                i,
+                player_info.get('name', 'N/A'),
+                '',  # Placeholder pour le logo
+                team_info.get('name', 'N/A'),
+                competition,
+                scorer.get('goals', 'N/A'),
+                scorer.get('coefficient', 'N/A'),
+                f"{scorer.get('golden_boot_points', 0):.1f}",
+                scorer.get('assists', '-'),
+                scorer.get('playedMatches', '-')
+            ), tags=(str(team_id),))
+
+            # Charger le logo de l'équipe
+            if team_logo_url:
+                threading.Thread(
+                    target=self._fetch_and_schedule_logo_update,
+                    args=(tree, item_id, team_id, team_logo_url),
+                    daemon=True
+                ).start()
+
+        # 2. Graphique des buteurs
+        graph_frame = ttk.Frame(notebook)
+        notebook.add(graph_frame, text="Graphique")
+
+        # Créer la figure matplotlib
+        fig, ax = plt.subplots(figsize=(10, 6))
+        
+        # Préparer les données
+        players = [f"{scorer['player']['name']} ({scorer['team']['tla']})" for scorer in scorers_data.get('scorers', [])[:10]]
+        points = [scorer['golden_boot_points'] for scorer in scorers_data.get('scorers', [])[:10]]
+        
+        # Créer le graphique à barres horizontales
+        bars = ax.barh(players, points)
+        
+        # Personnaliser le graphique
+        ax.set_title('Top 10 des Buteurs en Europe (Points Golden Boot)')
+        ax.set_xlabel('Points Golden Boot')
+        
+        # Ajouter les valeurs sur les barres
+        for bar in bars:
+            width = bar.get_width()
+            ax.text(width, bar.get_y() + bar.get_height()/2.,
+                   f'{width:.1f}', ha='left', va='center')
+        
+        plt.tight_layout()
+        
+        # Ajouter le graphique à l'interface Tkinter
+        canvas = FigureCanvasTkAgg(fig, master=graph_frame)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
     def run(self):
         """Lance l'application"""
