@@ -21,8 +21,8 @@ Une application de bureau Python pour suivre et analyser les statistiques de foo
 
 1. Clonez le repository :
 ```bash
-git clone [URL_DU_REPO]
-cd [NOM_DU_DOSSIER]
+git clone https://github.com/med-ta9i/MedScore
+cd MedScore
 ```
 
 2. Installez les dépendances requises :
